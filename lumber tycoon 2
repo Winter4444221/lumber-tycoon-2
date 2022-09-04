@@ -1,0 +1,299 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+
+local Window = Library.CreateLib("Police hub (Lumber tycoon 2)", "GrapeTheme")
+
+local Tab = Window:NewTab("Player")
+
+local PlayerMovementSection = Tab:NewSection("PlayerMovement")
+local Section = Tab:NewSection("Player")
+
+getgenv().InfJump = nil
+
+-- Field Of View Slider
+
+Section:NewSlider("Field Of View", "Changes your FOV", 120, 60, function(fov)
+    game.Workspace.Camera.FieldOfView = fov
+end)
+
+-- Infinite Jump Toggle
+
+PlayerMovementSection:NewToggle("Infinite jump", "Makes you able to jump a lot", function(toggled)
+    if toggled then
+        getgenv().InfJump = true
+        while getgenv().InfJump == true do
+            game:GetService("UserInputService").JumpRequest:connect(function()
+                if getgenv().InfJump == true then
+                    game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+                end
+            end)
+            wait()
+        end
+    else
+        getgenv().InfJump = false
+    end
+end)
+
+-- Walk Speed Slider
+
+PlayerMovementSection:NewSlider("Walk speed", "make you faster temp", 500, 16, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end) 
+PlayerMovementSection:NewSlider("Jump Power", "make you jump higher temp", 500, 50, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
+end) 
+
+Section:NewToggle("Freeze water", "Freezes the water", function(toggled)
+    if toggled then
+        getgenv().FreezeWater = true
+        spawn(function()
+            while getgenv().FreezeWater == true do
+                for _,v in pairs(game:GetService("Workspace").Water:GetChildren()) do
+                    if tostring(v) == "Water" then
+                        v.CanCollide = value
+                        if getgenv().FreezeWater == true then
+                            v.Reflectance = 1
+                        else
+                            v.Reflectance = 0
+                        end
+                    end
+                end
+                game:GetService("Workspace").Bridge.VerticalLiftBridge.WaterModel.Water.CanCollide = value
+                if value == true then
+                    game:GetService("Workspace").Bridge.VerticalLiftBridge.WaterModel.Water.Reflectance = 1
+                else
+                    game:GetService("Workspace").Bridge.VerticalLiftBridge.WaterModel.Water.Reflectance = 0
+                end
+                wait()
+            end
+        end)
+    else
+        getgenv().FreezeWater = false
+    end
+end)
+
+Section:NewButton("No-clip", "walk in wall's", function()
+    print("Clicked")
+    local Noclip = nil
+local Clip = nil
+
+function noclip()
+	Clip = false
+	local function Nocl()
+		if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+			for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if v:IsA('BasePart') and v.CanCollide and v.Name ~= floatName then
+					v.CanCollide = false
+				end
+			end
+		end
+		wait(0.21) -- basic optimization
+	end
+	Noclip = game:GetService('RunService').Stepped:Connect(Nocl)
+end
+
+function clip()
+	if Noclip then Noclip:Disconnect() end
+	Clip = true
+end
+
+noclip() -- to toggle noclip() and clip()
+end)
+
+
+local Tab = Window:NewTab("Teleport")
+
+local Section = Tab:NewSection("clik to tp")
+
+Section:NewButton("Click TP", "clik where you want to tp", function()
+    print("Clicked")
+    mouse = game.Players.LocalPlayer:GetMouse()
+tool = Instance.new("Tool")
+tool.RequiresHandle = false
+tool.Name = "Click Teleport"
+tool.Activated:connect(function()
+local pos = mouse.Hit+Vector3.new(0,2.5,0)
+pos = CFrame.new(pos.X,pos.Y,pos.Z)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+end)
+tool.Parent = game.Players.LocalPlayer.Backpack
+end)
+
+
+local Tab = Window:NewTab("Troll")
+
+local Section = Tab:NewSection("Troll")
+
+Section:NewButton("Pee script", "ButtonInfo", function()
+    print("Clicked")
+--[[Do not leak by PowerHeadShoot
+]]
+Player = game.Players.LocalPlayer
+Character = Player.Character 
+Head = Character.Head 
+Torso = Character.Torso
+function Weld(x,y)
+       local W = Instance.new("Weld")
+       W.Part0 = x
+       W.Part1 = y
+       local CJ = CFrame.new(x.Position)
+       local C0 = x.CFrame:inverse()*CJ
+       local C1 = y.CFrame:inverse()*CJ
+       W.C0 = C0
+       W.C1 = C1
+       W.Parent = x
+end
+local Breath=Instance.new("Part",Head)
+Breath.CFrame=Torso.CFrame*CFrame.new(0,-1,0)
+Breath.CanCollide=false
+Breath.Transparency=1
+Breath.Size=Vector3.new(0.050,0.050,0.050)
+Air=Instance.new("ParticleEmitter")
+Air.Parent=Breath
+Air.EmissionDirection="Front"
+Air.Rate=500
+Pees=Instance.new("Sound")
+Pees.Parent=Torso
+Pees.SoundId="rbxassetid://258063615"
+Pees.Looped=true
+Pees.Volume=0.8
+Pees:Play()
+Air.Color=ColorSequence.new(Color3.new(255,255,0),Color3.new(255,255,0))
+Air.Speed=NumberRange.new(15,15)
+Air.Acceleration=Vector3.new(0,-25,0)
+Air.Size=NumberSequence.new(0.1,0.1)
+Air.Lifetime=NumberRange.new(0.5,0.5)
+Air.Transparency=NumberSequence.new(0,0)
+Weld(Head,Breath)
+while true do
+local pee = Instance.new("Part", workspace)
+game:GetService("Debris"):AddItem(pee, 10)
+pee.CFrame=Torso.CFrame*CFrame.new(0,-2.9,-6)
+pee.CanCollide=false
+pee.BrickColor=BrickColor.new("New Yeller")
+pee.Transparency=0.4
+pmesh=Instance.new("SpecialMesh")
+pmesh.Parent=pee
+pmesh.Scale=Vector3.new(1,0.1,1)
+pmesh.MeshType="Sphere"
+pee.Anchored=true
+pee.Size=Vector3.new(1.5,0.01,1.5)
+wait(0.00000000001)
+pee.Size=Vector3.new(1.6,0.01,1.6)
+wait(0.00000000001)
+pee.Size=Vector3.new(1.7,0.01,1.7)
+wait(0.00000000001)
+pee.Size=Vector3.new(1.9,0.01,1.9)
+wait(0.00000000001)
+pee.Size=Vector3.new(2,0.01,2)
+wait (1/60)
+end --made by credit
+end)
+
+Section:NewButton("Train", "be a train", function()
+    print("Clicked")
+local p = game.Players.LocalPlayer.Character
+local weld = Instance.new("Weld",p.Torso)
+weld.Part0 = p.Torso
+
+local train = Instance.new("Part",p.Torso)
+train.Anchored = true
+train.CanCollide = false
+train.Size = Vector3.new(3,2,6)
+train.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+weld.Part1 = train
+weld.C1 = CFrame.new(0,0,0) * CFrame.Angles(0,math.rad(180),0)
+train.Anchored = false
+local TrainMesh = Instance.new("SpecialMesh",train)
+TrainMesh.MeshType = Enum.MeshType.FileMesh
+TrainMesh.Scale = Vector3.new(0.020,0.020,0.015)
+TrainMesh.MeshId = "rbxassetid://431017802"
+TrainMesh.TextureId = "rbxassetid://431017809"
+
+
+local weld2 = Instance.new("Weld",p.Torso)
+weld2.Part0 = p.Torso
+local Smoke = Instance.new("Part",p.Torso)
+Smoke.Anchored = true
+Smoke.CanCollide = false
+Smoke.Size = Vector3.new(1,1,1)
+Smoke.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+weld2.Part1 = Smoke
+weld2.C1 = CFrame.new(0,-4,3.5)-- * CFrame.Angles(0,math.rad(180),0)
+Smoke.Anchored = false
+Smoke.Transparency = 1;
+
+local Particle = Instance.new("ParticleEmitter",Smoke)
+Particle.Rate = 50;
+Particle.Speed = NumberRange.new(30,60);
+Particle.VelocitySpread = 4;
+Particle.Texture = "rbxassetid://133619974"
+
+local Light = Instance.new("SpotLight",train)
+Light.Angle = 45;
+Light.Brightness = 100;
+Light.Face = Enum.NormalId.Back;
+Light.Range = 30;
+
+p.Humanoid.WalkSpeed = 60;
+
+
+for i,v in pairs(p:GetChildren()) do
+	if v:IsA("Part") then
+		v.Transparency = 1;
+	elseif v:IsA("Hat") then
+		v:Destroy()
+	elseif v:IsA("Model") then
+		v:Destroy()
+	end
+end
+
+local function SFX(id) local s=Instance.new("Sound",p.Torso); s.SoundId = "rbxassetid://"..id; s.Volume = 1; return s; end
+train.Touched:connect(function(p)
+	if p.Parent then
+		if p.Parent:IsA("Model") then
+			if game.Players:FindFirstChild(p.Parent.Name) then
+				if p.Parent.Name ~= game.Players.LocalPlayer.Name then
+					game.Players:FindFirstChild(p.Parent.Name).Character:BreakJoints()
+					local Whistle = SFX(475073913)
+					Whistle:Play()
+				end
+			end
+		end
+	end
+end)
+
+local Music = SFX(190819252)
+Music.Looped = true;
+wait(1)
+end)
+
+Section:NewButton("Sword's", "you have 4 swaord's", function()
+    print("Clicked")
+loadstring(game:HttpGet("https://pastebin.com/raw/80juE2kw", true))()
+end)
+
+Section:NewButton("Big sword", "big boy knife", function()
+    print("Clicked")
+game:GetObjects("rbxassetid://169934427")[1].Parent=game.Players.LocalPlayer.Backpack
+end)
+
+Section:NewButton("dupe player", "have a twin", function()
+    print("Clicked")
+loadstring(game:GetObjects('rbxassetid://7339698872')[1].Source)() 
+end)
+
+local Tab = Window:NewTab("Credit")
+
+local Section = Tab:NewSection("Credit")
+
+local Section = Tab:NewSection("Made by police#4602")
+
+local Section = Tab:NewSection("And AngryFox_YT#1257")
+
+local Section = Tab:NewSection("Police Hub DC Server: ")
+
+local Section = Tab:NewSection("https://discord.gg/BN4tCjjVPM%22")
+
+local Section = Tab:NewSection("AngryFox's Hub Discord Server: not finished yet")
+
+local Section = Tab:NewSection("Where his sever will be")
